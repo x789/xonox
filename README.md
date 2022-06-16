@@ -9,9 +9,13 @@ pip install xonox
 ```
 
 ### Start Service
-Run the service:
+If you want `xonox` to listen on all bound IP-addresses:
 ```
 python -m xonox
+```
+If you want `xonox` to listen only on a single IP-address:
+```
+python -m xonox 192.168.3.3
 ```
 
 ### Configure Environment
@@ -22,7 +26,7 @@ The NOXON(tm) devices locate their services via DNS. To allow them to find the a
 ### Add Stations to the Station List
 You can add stations to `xonox` by POSTing its metadata to the `/station` endpoint.
 ```
-curl --location --request POST 'http://192.168.15.129/station' \
+curl --location --request POST 'http://legacy.noxonserver.eu/station' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "name": "Radio Swiss Pop",

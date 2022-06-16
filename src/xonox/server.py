@@ -89,8 +89,5 @@ def __station_to_xml(station, baseUri):
 
 # Application ####################
 ##################################
-def run():    
-    app.run(host='0.0.0.0', port=80)
-
-if __name__ == '__main__':
-    run()
+def run(host):    
+    app.run(host=host, port=80)
