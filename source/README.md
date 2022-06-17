@@ -60,7 +60,7 @@ curl --location --request DELETE 'http://legacy.noxonserver.eu/station/0'
 
 
 ## Changelog
-### 0.0.4
+### 0.0.4 (Work in Progress)
 - Added persistence of the station list.
 
 ### 0.0.3
