@@ -55,6 +55,14 @@ def get_station(id):
     except IndexError:
         return abort(404)
 
+@app.route('/station/<int:id>', methods=['delete'])
+def delete_station(id):
+    try:
+        stationRepository.remove(id)
+        return Response(status=204)
+    except IndexError:
+        return abort(404)
+
 # NOXON(tm) API ##################
 ##################################
 @app.route('/setupapp/fs/asp/BrowseXML/loginXML.asp')

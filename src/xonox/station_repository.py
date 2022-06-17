@@ -15,3 +15,6 @@ class StationRepository:
 
     def get_all(self):
         return self.__data.copy()
+
+    def remove(self, id):
+        self.__data.pop(id)

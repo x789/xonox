@@ -23,7 +23,8 @@ The NOXON(tm) devices locate their services via DNS. To allow them to find the a
 - legacy.noxonserver.eu
 - gate1.noxonserver.eu
 
-### Add Stations to the Station List
+### Manage Your Station List
+#### Add Stations
 You can add stations to `xonox` by POSTing its metadata to the `/station` endpoint.
 ```
 curl --location --request POST 'http://legacy.noxonserver.eu/station' \
@@ -34,9 +35,20 @@ curl --location --request POST 'http://legacy.noxonserver.eu/station' \
     "streamUrl": "http://stream.srg-ssr.ch/m/rsp/mp3_128"
 }'
 ```
-Please note that `streamUrl` needs to point to the MP3 stream and not to a playlist (M3U). If you don't know how to get this information for your favorite station, have a look at the [RadioBrowser](https://www.radio-browser.info/) project.
+Please note that `streamUrl` needs to point to the MP3 stream and not to a playlist (M3U). If you don't know how to get this information for your favorite station, have a look at station list of the [RadioBrowser](https://www.radio-browser.info/) project.
+Remember that the Noxon(tm) iRadios do not support HTTPS. Therefore you need to __supply an HTTP-URL__.
 
 __For now, added stations are not stored permanently. They get lost when `xonox` is restarted. This will be fixed in the future (see roadmap below).__
+
+#### Get the List
+```
+curl --location --request GET 'http://legacy.noxonserver.eu/station'
+```
+
+#### Remove a Station
+```
+curl --location --request DELETE 'http://legacy.noxonserver.eu/station/0'
+```
 
 ## Missing Features
 `xonox` is far way from completeness. These things are missing so far:
