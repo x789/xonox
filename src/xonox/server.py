@@ -67,11 +67,11 @@ def getToken():
 @app.route('/setupapp/fs/asp/BrowseXML/Search.asp')
 def searchStation():
     requestedStationId = int(request.args.get('Search'))
-    station = stationRepository.get(requestedStationId)
-    if (station is not None):
+    try:
+        station = stationRepository.get(requestedStationId)
         return __create_station_list([station], request.host_url)
-    else:
-        abort(404)
+    except IndexError:
+        return abort(404)
 
 @app.route('/noOp')
 def no_op():
