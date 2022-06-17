@@ -58,14 +58,14 @@ def get_station(id):
 # NOXON(tm) API ##################
 ##################################
 @app.route('/setupapp/fs/asp/BrowseXML/loginXML.asp')
-def getToken():
+def get_root_menu():
     if (request.args.get('mac') is None):
         return '<EncryptedToken>a6703ded78821be5</EncryptedToken>'
     else:
         return __create_station_list(stationRepository.get_all(), request.host_url)
 
 @app.route('/setupapp/fs/asp/BrowseXML/Search.asp')
-def searchStation():
+def search_station():
     requestedStationId = int(request.args.get('Search'))
     try:
         station = stationRepository.get(requestedStationId)
