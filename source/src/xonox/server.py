@@ -18,7 +18,7 @@ def convert_input_to(class_):
         return decorator
     return wrap
 
-class CustomJsonEncoder(json.JSONEncoder):
+class ObjectToJsonStringEncoder(json.JSONEncoder):
     '''A JSON encoder that tries to serialize using 'to_json' or returns the dictionary of the object to serialize.'''
     def default(self, o):
         if hasattr(o, 'to_json'):
@@ -31,7 +31,7 @@ class CustomJsonEncoder(json.JSONEncoder):
 ##################################
 app = Flask(__name__)
 stationRepository = StationRepository()
-app.json_encoder = CustomJsonEncoder
+app.json_encoder = ObjectToJsonStringEncoder
 
 # Management API #################
 ##################################
