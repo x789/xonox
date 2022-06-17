@@ -1,5 +1,5 @@
-# XONOX
-An alternative service for legacy NOXON(tm) devices.
+# xonox
+An alternative infrastructure-service for legacy NOXON(tm) devices.
 
 ## Getting Started
 ### Installation
@@ -18,12 +18,12 @@ If you want `xonox` to listen only on a single IP-address:
 python -m xonox 192.168.3.3
 ```
 
-### Configure Environment
+### Configure Your Environment
 The NOXON(tm) devices locate their services via DNS. To allow them to find the alternative service, you need to configure your local DNS so that the following names point to the host that runs `xonox`.
 - legacy.noxonserver.eu
 - gate1.noxonserver.eu
 
-### Manage Your Station List
+## Manage Your Station List
 #### Add Stations
 You can add stations to `xonox` by POSTing its metadata to the `/station` endpoint.
 ```

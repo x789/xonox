@@ -1,5 +1,5 @@
 # xonox
-In June 2022, Noxon(tm) has decided to discontinue infrastructure services for legacy iRadio series devices.
+In June 2022, Noxon(tm) decided to discontinue the infrastructure-services for legacy iRadio series devices.
 
 `xonox` is an alternative for these infrastructure-services that you can easily host at home.
 
