@@ -38,8 +38,6 @@ curl --location --request POST 'http://legacy.noxonserver.eu/station' \
 Please note that `streamUrl` needs to point to the MP3 stream and not to a playlist (M3U). If you don't know how to get this information for your favorite station, have a look at station list of the [RadioBrowser](https://www.radio-browser.info/) project.
 Remember that the Noxon(tm) iRadios do not support HTTPS. Therefore you need to __supply an HTTP-URL__.
 
-__For now, added stations are not stored permanently. They get lost when `xonox` is restarted. This will be fixed in the future (see roadmap below).__
-
 #### Get the List
 ```
 curl --location --request GET 'http://legacy.noxonserver.eu/station'
@@ -50,12 +48,22 @@ curl --location --request GET 'http://legacy.noxonserver.eu/station'
 curl --location --request DELETE 'http://legacy.noxonserver.eu/station/0'
 ```
 
+## Configuration File
+`xonox` writes its configuration and station-list to a file called `xonox.conf` inside the user's home directory. For know, there is no way to configure that location.
+
+
 ## Missing Features
 `xonox` is far way from completeness. These things are missing so far:
 - Playlist support
 - A GUI to manage the station list
-- Store stations permanently
 - Support favorites/presets
 
+
+## Changelog
+### 0.0.4
+- Added persistence of the station list.
+
+### 0.0.3
+- First publicly available release
 
 (c) 2022 TillW - Licensed to you under the AGPL v3.0
