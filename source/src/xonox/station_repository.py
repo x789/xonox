@@ -8,9 +8,11 @@ from os import path
 from xonox.station import Station
 
 class StationRepository:
-    def __init__(self):
+    def __init__(self, configDirectory):
         self.__data = []
-        self.__configPath = path.join(Path.home(), 'xonox.conf')
+        if configDirectory is None:
+            configDirectory = Path.home()
+        self.__configPath = path.join(configDirectory, 'xonox.conf')
         self.__load_data_from_file()
 
     def add(self, station):
@@ -29,15 +31,18 @@ class StationRepository:
         self.__write_data_to_file()
 
     def __load_data_from_file(self):
-        with open(self.__configPath, 'r') as file:
-            config = json.load(file)
-            if ('stations' in config):
-                stations = config['stations']
-                for station in stations:
-                    self.add(Station(station['name'], station['description'], station['stream']))
-
+        try:
+            with open(self.__configPath, 'r') as file:
+                config = json.load(file)
+                if ('stations' in config):
+                    stations = config['stations']
+                    for station in stations:
+                        self.add(Station(station['name'], station['description'], station['stream']))
+        except FileNotFoundError:
+            pass
 
     def __write_data_to_file(self):
-        config = { 'stations': self.__data }
-        with open(self.__configPath, 'w') as file:
-            json.dump(config, file, default=lambda o: o.__dict__, sort_keys=False, indent=2)
+        if len(self.__data) > 0:
+            config = { 'stations': self.__data }
+            with open(self.__configPath, 'w+') as file:
+                json.dump(config, file, default=lambda o: o.__dict__, sort_keys=False, indent=2)
