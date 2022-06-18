@@ -13,9 +13,9 @@ If you want `xonox` to listen on all bound IP-addresses:
 ```
 python -m xonox
 ```
-If you want `xonox` to listen only on a single IP-address:
+If you want `xonox` to listen only on a single IP-address you can use the `--host` parameter to specify it.
 ```
-python -m xonox 192.168.3.3
+python -m xonox --host 192.168.3.3
 ```
 
 ### Configure Your Environment
@@ -49,7 +49,7 @@ curl --location --request DELETE 'http://legacy.noxonserver.eu/station/0'
 ```
 
 ## Configuration File
-`xonox` writes its configuration and station-list to a file called `xonox.conf` inside the user's home directory. For know, there is no way to configure that location.
+By default, `xonox` writes its configuration and station-list to a file called `xonox.conf` inside the user's home directory. If this causes problems on your system, you can specify the storage directory using the `--config-dir` parameter.
 
 
 ## Missing Features
@@ -60,7 +60,12 @@ curl --location --request DELETE 'http://legacy.noxonserver.eu/station/0'
 
 
 ## Changelog
-### 0.0.4 (Work in Progress)
+### 0.0.5 (Work in Progress)
+- __BREAKING CHANGE__ If the service shall bound to a specific ip-address, it must be provided via `--host` and not the positional parameter like in previous versions.
+- Added possibility to configure the location of `xonox.config` via command-line parameter `--config-dir`.
+- Fixed 'config not found'
+
+### 0.0.4 (Withdrawn)
 - Added persistence of the station list.
 
 ### 0.0.3

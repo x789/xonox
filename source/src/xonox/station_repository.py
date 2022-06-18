@@ -8,9 +8,11 @@ from os import path
 from xonox.station import Station
 
 class StationRepository:
-    def __init__(self):
+    def __init__(self, configDirectory):
         self.__data = []
-        self.__configPath = path.join(Path.home(), 'xonox.conf')
+        if configDirectory is None:
+            configDirectory = Path.home()
+        self.__configPath = path.join(configDirectory, 'xonox.conf')
         self.__load_data_from_file()
 
     def add(self, station):

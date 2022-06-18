@@ -30,7 +30,7 @@ class ObjectToJsonStringEncoder(json.JSONEncoder):
 # WebAPI Initialization ##########
 ##################################
 app = Flask(__name__)
-stationRepository = StationRepository()
+stationRepository = None
 app.json_encoder = ObjectToJsonStringEncoder
 
 # Management API #################
@@ -97,5 +97,7 @@ def __station_to_xml(station, baseUri):
 
 # Application ####################
 ##################################
-def run(host):    
+def run(host, configDirectory):
+    global stationRepository
+    stationRepository = StationRepository(configDirectory)
     app.run(host=host, port=80)
