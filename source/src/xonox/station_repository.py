@@ -29,13 +29,15 @@ class StationRepository:
         self.__write_data_to_file()
 
     def __load_data_from_file(self):
-        with open(self.__configPath, 'r') as file:
-            config = json.load(file)
-            if ('stations' in config):
-                stations = config['stations']
-                for station in stations:
-                    self.add(Station(station['name'], station['description'], station['stream']))
-
+        try:
+            with open(self.__configPath, 'r') as file:
+                config = json.load(file)
+                if ('stations' in config):
+                    stations = config['stations']
+                    for station in stations:
+                        self.add(Station(station['name'], station['description'], station['stream']))
+        except FileNotFoundError:
+            pass
 
     def __write_data_to_file(self):
         config = { 'stations': self.__data }
