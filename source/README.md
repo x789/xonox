@@ -60,7 +60,10 @@ By default, `xonox` writes its configuration and station-list to a file called `
 
 
 ## Changelog
-### 0.0.5 (Work in Progress)
+### 0.0.6 (Work in Progress)
+- Fixed [non-unique station-IDs](https://github.com/x789/xonox/issues/3)
+
+### 0.0.5
 - __BREAKING CHANGE__ If the service shall bound to a specific ip-address, it must be provided via `--host` and not the positional parameter like in previous versions.
 - Added possibility to configure the location of `xonox.config` via command-line parameter `--config-dir`.
 - Fixed 'config not found'
