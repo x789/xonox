@@ -4,8 +4,8 @@
 
 from collections import namedtuple
 from flask import Flask, request, abort, jsonify, json, Response
-from xonox.station import Station
-from xonox.station_repository import StationRepository
+from . import Station
+from . import StationRepository
 
 # WebAPI Helpers #################
 ##################################

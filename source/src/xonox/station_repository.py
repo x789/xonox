@@ -5,7 +5,7 @@
 import json
 from pathlib import Path
 from os import path
-from xonox.station import Station
+from . import Station
 
 class StationRepository:
     def __init__(self, configDirectory):
