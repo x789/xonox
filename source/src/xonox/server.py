@@ -52,7 +52,7 @@ def get_station_list():
 def get_station(id):
     try:
         return jsonify(stationRepository.get(id))
-    except IndexError:
+    except KeyError:
         return abort(404)
 
 @app.route('/station/<int:id>', methods=['delete'])
@@ -60,7 +60,7 @@ def delete_station(id):
     try:
         stationRepository.remove(id)
         return Response(status=204)
-    except IndexError:
+    except KeyError:
         return abort(404)
 
 # NOXON(tm) API ##################
