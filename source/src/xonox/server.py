@@ -83,7 +83,7 @@ def search_station():
 
 @app.route('/noOp')
 def no_op():
-    return ""
+    return ''
 
 def __create_station_list(stations, baseUri):
     result = '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?><ListOfItems><ItemCount>-1</ItemCount>'
