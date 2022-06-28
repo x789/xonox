@@ -72,6 +72,6 @@ class StationRepository:
 
     def __write_data_to_file(self):
         if len(self.__data) > 0:
-            config = { 'stations': self.__data }
+            config = { 'stations': self.__data, 'nextStationId': self.__next_station_id }
             with open(self.__configPath, 'w+') as file:
                 json.dump(config, file, default=lambda o: o.__dict__, sort_keys=False, indent=2)

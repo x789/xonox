@@ -150,3 +150,19 @@ class StationRepositoryTestCase(TestCase):
         assert s.name is 'foo'
         assert s.description is 'bar'
         assert s.stream is 'http://example.stream'
+
+    def test_persistence_of_id_counter(self):
+        old_repository = StationRepository(None)
+        old_repository.add(Station('foo', 'bar', 'http://example.stream', 15))
+        old_repository.remove(15)
+        sut = StationRepository(None)
+        expected = Station('Radio Tralalala', 'Finest Tralala Music', 'http://metamorphosator.com/stream')
+
+        sut.add(expected)
+
+        assert sut.get(16) is not None
+        actual = sut.get(16)
+        assert actual.id == expected.id
+        assert actual.name == expected.name
+        assert actual.description == expected.description
+        assert actual.stream == expected.stream
