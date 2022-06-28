@@ -3,8 +3,8 @@
 # Licensed to you under Affero GPL 3.0 (https://www.gnu.org/licenses/agpl-3.0.html)
 
 class Station:
-    def __init__(self, name, description, stream):
-        self.id = None
+    def __init__(self, name, description, stream, id = None):
+        self.id = id
         self.name = name
         self.description = description
         self.stream = stream

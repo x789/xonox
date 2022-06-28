@@ -4,8 +4,8 @@
 
 from collections import namedtuple
 from flask import Flask, request, abort, jsonify, json, Response
-from xonox.station import Station
-from xonox.station_repository import StationRepository
+from . import Station
+from . import StationRepository
 
 # WebAPI Helpers #################
 ##################################
@@ -52,7 +52,7 @@ def get_station_list():
 def get_station(id):
     try:
         return jsonify(stationRepository.get(id))
-    except IndexError:
+    except KeyError:
         return abort(404)
 
 @app.route('/station/<int:id>', methods=['delete'])
@@ -60,7 +60,7 @@ def delete_station(id):
     try:
         stationRepository.remove(id)
         return Response(status=204)
-    except IndexError:
+    except KeyError:
         return abort(404)
 
 # NOXON(tm) API ##################
@@ -83,7 +83,7 @@ def search_station():
 
 @app.route('/noOp')
 def no_op():
-    return ""
+    return ''
 
 def __create_station_list(stations, baseUri):
     result = '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?><ListOfItems><ItemCount>-1</ItemCount>'
