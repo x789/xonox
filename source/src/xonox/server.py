@@ -23,9 +23,12 @@ class ObjectToJsonStringEncoder(json.JSONEncoder):
     def default(self, o):
         if hasattr(o, 'to_json'):
             return o.to_json()
+        if isinstance(o, Station): # Change name of property 'stream' to 'streamUrl'
+            o2 = dict(o.__dict__)
+            o2['streamUrl'] = o2.pop('stream')
+            return o2
         else:
-            attrs = o.__dict__
-            return json.dumps(attrs)
+            return o.__dict__
 
 # WebAPI Initialization ##########
 ##################################
