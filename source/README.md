@@ -65,8 +65,9 @@ By default, `xonox` writes its configuration and station-list to a file called `
 
 
 ## Changelog
-### 0.0.6 (Work in Progress)
-- Fixed [non-unique station-IDs](https://github.com/x789/xonox/issues/3)
+### 0.0.6
+- Fixed [Management API does not return JSON](https://github.com/x789/xonox/issues/4)
+- Fixed [Non-unique station-IDs](https://github.com/x789/xonox/issues/3)
 
 ### 0.0.5
 - __BREAKING CHANGE__ If the service shall bound to a specific ip-address, it must be provided via `--host` and not the positional parameter like in previous versions.
