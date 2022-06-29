@@ -65,6 +65,9 @@ By default, `xonox` writes its configuration and station-list to a file called `
 
 
 ## Changelog
+### 0.0.7 (Work in Progress)
+- ...
+
 ### 0.0.6
 - Fixed [Management API does not return JSON](https://github.com/x789/xonox/issues/4)
 - Fixed [Non-unique station-IDs](https://github.com/x789/xonox/issues/3)
