@@ -1,6 +1,12 @@
 # xonox
 An alternative infrastructure-service for legacy NOXON(tm) devices.
 
+## Compatible Devices
+The following devices were reported as compatible:
+* Noxon(tm) iRadio
+* Noxon(tm) iRadio 300/360
+* Noxon(tm) iRadio 400
+
 ## Getting Started
 ### Installation
 Install the module and all of its dependencies via pip:
@@ -53,7 +59,6 @@ By default, `xonox` writes its configuration and station-list to a file called `
 
 
 ## Missing Features
-`xonox` is far way from completeness. These things are missing so far:
 - Playlist support
 - A GUI to manage the station list
 - Support favorites/presets
