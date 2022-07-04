@@ -4,8 +4,7 @@
 
 from collections import namedtuple
 from flask import Flask, request, abort, jsonify, json, Response
-from . import Station
-from . import StationRepository
+from . import Station, StationRepository, Preset, PresetRepository
 
 # WebAPI Helpers #################
 ##################################
@@ -34,6 +33,7 @@ class ObjectToJsonStringEncoder(json.JSONEncoder):
 ##################################
 app = Flask(__name__)
 stationRepository = None
+presetRepository = None
 app.json_encoder = ObjectToJsonStringEncoder
 
 # Management API #################
@@ -90,6 +90,15 @@ def add_preset():
     result = result + '<Item><ItemType>Message</ItemType><Message>not supported (yet)</Message></Item>'
     result = result + '</ListOfItems>'
     return result
+
+@app.route('/Favorites/GetPreset.aspx')
+def get_preset():
+    device_id = str(request.args.get('mac'))
+    preset_index = int(request.args.get('id'))
+    preset = presetRepository.get(device_id, preset_index)
+    station = stationRepository.get(preset.station_id)
+    return __create_station_list([station], request.host_url)
+
 @app.route('/noOp')
 def no_op():
     return ''
@@ -108,5 +117,7 @@ def __station_to_xml(station, baseUri):
 ##################################
 def run(host, configDirectory):
     global stationRepository
+    global presetRepository
     stationRepository = StationRepository(configDirectory)
+    presetRepository = PresetRepository(configDirectory)
     app.run(host=host, port=80)
