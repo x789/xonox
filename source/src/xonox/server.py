@@ -84,6 +84,12 @@ def search_station():
     except IndexError:
         return abort(404)
 
+@app.route('/Favorites/AddPreset.aspx')
+def add_preset():
+    result = '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?><ListOfItems><ItemCount>-1</ItemCount>'
+    result = result + '<Item><ItemType>Message</ItemType><Message>not supported (yet)</Message></Item>'
+    result = result + '</ListOfItems>'
+    return result
 @app.route('/noOp')
 def no_op():
     return ''
