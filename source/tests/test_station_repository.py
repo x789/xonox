@@ -3,7 +3,7 @@ from src.xonox.station_repository import StationRepository
 from src.xonox.station import Station
 from os import path
 
-class StationRepositoryTestCase(TestCase):    
+class StationRepositoryTestCase(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
 
