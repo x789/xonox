@@ -1,6 +1,6 @@
 FROM python:3-slim-buster
 
-LABEL version="0.4"
+LABEL version="0.0.7"
 LABEL description="Dockerfile for xonox backend"
 
 WORKDIR /usr/src/app
