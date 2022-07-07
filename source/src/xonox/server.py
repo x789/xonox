@@ -34,6 +34,7 @@ class ObjectToJsonStringEncoder(json.JSONEncoder):
 app = Flask(__name__)
 stationRepository = None
 presetRepository = None
+stationTracker = dict() # used to track the last requested station per device to support presets/favorites
 app.json_encoder = ObjectToJsonStringEncoder
 
 # Management API #################
@@ -80,24 +81,33 @@ def search_station():
     requestedStationId = int(request.args.get('Search'))
     try:
         station = stationRepository.get(requestedStationId)
+        __track_station(station, request)
         return __create_station_list([station], request.host_url)
     except IndexError:
         return abort(404)
 
 @app.route('/Favorites/AddPreset.aspx')
 def add_preset():
-    result = '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?><ListOfItems><ItemCount>-1</ItemCount>'
-    result = result + '<Item><ItemType>Message</ItemType><Message>not supported (yet)</Message></Item>'
-    result = result + '</ListOfItems>'
+    device_id, preset_index = __get_device_and_preset_index(request)
+    if device_id in stationTracker.keys():
+        station_id = stationTracker[device_id]
+        presetRepository.add(Preset(device_id, preset_index, station_id))
+        result = '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?><ListOfItems><ItemCount>-1</ItemCount><Item><ItemType>Message</ItemType><Message>Preset set</Message></Item></ListOfItems>'
+    else:
+        result = '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?><ListOfItems><ItemCount>-1</ItemCount>'
+        result = result + '<Item><ItemType>Message</ItemType><Message>Preset not created. Reselect the station to preset and then try again.</Message></Item>'
+        result = result + '</ListOfItems>'
     return result
 
 @app.route('/Favorites/GetPreset.aspx')
 def get_preset():
-    device_id = str(request.args.get('mac'))
-    preset_index = int(request.args.get('id'))
-    preset = presetRepository.get(device_id, preset_index)
-    station = stationRepository.get(preset.station_id)
-    return __create_station_list([station], request.host_url)
+    device_id, preset_index = __get_device_and_preset_index(request)
+    try:
+        preset = presetRepository.get(device_id, preset_index)
+        station = stationRepository.get(preset.station_id)
+        return __create_station_list([station], request.host_url)
+    except KeyError:
+        return '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?><ListOfItems><ItemCount>-1</ItemCount><Item><ItemType>Message</ItemType><Message>Preset not found</Message></Item></ListOfItems>'
 
 @app.route('/noOp')
 def no_op():
@@ -112,6 +122,19 @@ def __create_station_list(stations, baseUri):
 
 def __station_to_xml(station, baseUri):
     return '<Item><ItemType>Station</ItemType><StationId>' + str(station.id) + '</StationId><StationName>' + station.name + '</StationName><StationUrl>' + station.stream + '</StationUrl><StationDesc>' + station.description + '</StationDesc><StationFormat>Public</StationFormat><StationLocation>n/a</StationLocation><StationBandWidth>128</StationBandWidth><StationMime>MP3</StationMime><Relia>1</Relia><Bookmark>' + baseUri + '/noOp</Bookmark><Logo>' + baseUri + '/noOp</Logo></Item>'
+
+def __track_station(station, request):    
+    device_id = __get_device_id(request)
+    stationTracker[device_id] = station.id
+
+def __get_device_id(request):
+    return str(request.args.get('mac'))
+
+def __get_preset_index(request):
+    return int(request.args.get('id'))
+
+def __get_device_and_preset_index(request):
+    return (__get_device_id(request), __get_preset_index(request))
 
 # Application ####################
 ##################################
