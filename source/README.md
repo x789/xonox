@@ -57,16 +57,9 @@ curl --location --request DELETE 'http://legacy.noxonserver.eu/station/0'
 ## Configuration File
 By default, `xonox` writes its configuration and station-list to a file called `xonox.conf` inside the user's home directory. If this causes problems on your system, you can specify the storage directory using the `--config-dir` parameter.
 
-
-## Missing Features
-- Playlist support
-- A GUI to manage the station list
-- Support favorites/presets
-
-
 ## Changelog
 ### 0.0.7 (Work in Progress)
-- ...
+- [Added support for preset-buttons](https://github.com/x789/xonox/issues/9)
 
 ### 0.0.6
 - Fixed [Management API does not return JSON](https://github.com/x789/xonox/issues/4)
