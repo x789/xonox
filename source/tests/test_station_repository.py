@@ -1,3 +1,7 @@
+# xonox - an alternative service for legacy NOXON(tm) devices
+# (c) 2022 - TillW
+# Licensed to you under Affero GPL 3.0 (https://www.gnu.org/licenses/agpl-3.0.html)
+
 from pyfakefs.fake_filesystem_unittest import TestCase
 from src.xonox.station_repository import StationRepository
 from src.xonox.station import Station
