@@ -4,7 +4,7 @@
 
 from collections import namedtuple
 from flask import Flask, request, abort, jsonify, json, Response
-from . import Station, StationRepository, Preset, PresetRepository
+from . import Config, Station, StationRepository, Preset, PresetRepository
 
 # WebAPI Helpers #################
 ##################################
@@ -138,9 +138,10 @@ def __get_device_and_preset_index(request):
 
 # Application ####################
 ##################################
-def run(host, configDirectory):
+def run(host, config_directory):
     global stationRepository
     global presetRepository
-    stationRepository = StationRepository(configDirectory)
-    presetRepository = PresetRepository(configDirectory)
+    config = Config(config_directory)
+    stationRepository = StationRepository(config)
+    presetRepository = PresetRepository(config)
     app.run(host=host, port=80)
