@@ -71,10 +71,11 @@ def delete_station(id):
 ##################################
 @app.route('/setupapp/fs/asp/BrowseXML/loginXML.asp')
 def get_root_menu():
-    if (request.args.get('mac') is None):
+    if (__get_device_id(request) is None):
         return '<EncryptedToken>a6703ded78821be5</EncryptedToken>'
     else:
-        return __create_station_list(stationRepository.get_all(), request.host_url)
+        sorted_stations = sorted(stationRepository.get_all(), key=lambda x: x.name)
+        return __create_station_list(sorted_stations, request.host_url)
 
 @app.route('/setupapp/fs/asp/BrowseXML/Search.asp')
 def search_station():
