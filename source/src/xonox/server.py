@@ -2,6 +2,7 @@
 # (c) 2022 - TillW
 # Licensed to you under Affero GPL 3.0 (https://www.gnu.org/licenses/agpl-3.0.html)
 
+from functools import wraps
 from collections import namedtuple
 from flask import Flask, request, abort, jsonify, json, Response
 from . import Config, Station, StationRepository, Preset, PresetRepository
@@ -9,13 +10,14 @@ from . import Config, Station, StationRepository, Preset, PresetRepository
 # WebAPI Helpers #################
 ##################################
 def convert_input_to(class_):
-    '''A decorator to create an object from the JSON transferred in a request-body.'''
-    def wrap(f):
-        def decorator(*args):
+    def decorator(fn):
+        '''A decorator to create an object from the JSON transferred in a request-body.'''
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
             obj = class_(**request.get_json())
-            return f(obj)
-        return decorator
-    return wrap
+            return fn(obj)
+        return wrapper
+    return decorator
 
 class ObjectToJsonStringEncoder(json.JSONEncoder):
     '''A JSON encoder that tries to serialize using 'to_json' or returns the dictionary of the object to serialize.'''
