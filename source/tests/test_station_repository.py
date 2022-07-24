@@ -1,14 +1,16 @@
-from pyfakefs.fake_filesystem_unittest import TestCase
-from src.xonox.station_repository import StationRepository
-from src.xonox.station import Station
-from os import path
+# xonox - an alternative service for legacy NOXON(tm) devices
+# (c) 2022 - TillW
+# Licensed to you under Affero GPL 3.0 (https://www.gnu.org/licenses/agpl-3.0.html)
 
-class StationRepositoryTestCase(TestCase):    
+from pyfakefs.fake_filesystem_unittest import TestCase
+from src.xonox import Config, Station, StationRepository
+
+class StationRepositoryTestCase(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
 
     def test_init_without_config(self):
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
 
         stations = sut.get_all()
 
@@ -16,21 +18,21 @@ class StationRepositoryTestCase(TestCase):
 
     def test_get_unknown(self):
         station = Station('foo', 'bar', 'http://example.stream')
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
         sut.add(station)
         
         with self.assertRaises(KeyError):
             sut.get(29725)
 
     def test_get_unknown_when_empty(self):
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
         
         with self.assertRaises(KeyError):
             sut.get(0)
 
     def test_delete(self):
         station = Station('foo', 'bar', 'http://example.stream')
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
         sut.add(station)
 
         sut.remove(0)
@@ -39,7 +41,7 @@ class StationRepositoryTestCase(TestCase):
 
     def test_delete_unknown(self):
         station = Station('foo', 'bar', 'http://example.stream')
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
         sut.add(station)
 
         with self.assertRaises(KeyError):
@@ -47,7 +49,7 @@ class StationRepositoryTestCase(TestCase):
 
     def test_add_new_to_empty(self):
         station = Station('foo', 'bar', 'http://example.stream')
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
 
         sut.add(station)
 
@@ -56,7 +58,7 @@ class StationRepositoryTestCase(TestCase):
         assert sut.get(0).id == 0
 
     def test_add_new_to_nonempty(self):
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
         sut.add(Station('1', 'one', 'http://example.stream/1'))
 
         sut.add(Station('2', 'two', 'http://example.stream/2'))
@@ -75,7 +77,7 @@ class StationRepositoryTestCase(TestCase):
 
     def test_add_old_to_empty(self):
         station = Station('foo', 'bar', 'http://example.stream', 3597)
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
 
         sut.add(station)
 
@@ -83,7 +85,7 @@ class StationRepositoryTestCase(TestCase):
         assert sut.get(3597) is not None
     
     def test_add_old_after_new(self):
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
         sut.add(Station('1', 'one', 'http://example.stream/1'))
 
         sut.add(Station('foo', 'bar', 'http://example.stream', 1337))
@@ -101,7 +103,7 @@ class StationRepositoryTestCase(TestCase):
         assert sut.get(1337).stream is 'http://example.stream'
 
     def test_add_new_after_old(self):
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
         sut.add(Station('foo', 'bar', 'http://example.stream', 1337))
 
         sut.add(Station('1', 'one', 'http://example.stream/1'))
@@ -120,7 +122,7 @@ class StationRepositoryTestCase(TestCase):
 
     def test_issue_3(self):
         """Tests the fix for issue #3. See https://github.com/x789/xonox/issues/3 for details."""
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
         sut.add(Station('Station A', 'AAA', 'http://example.stream/A'))
         sut.add(Station('Station B', 'BBB', 'http://example.stream/B'))
         sut.add(Station('Station C', 'CCC', 'http://example.stream/C'))
@@ -138,7 +140,7 @@ class StationRepositoryTestCase(TestCase):
         IDs are unique. Before v0.0.6 collisions could occur but there is no automatic solution for that issue. This test is primarily for documentation purpose.
         See https://github.com/x789/xonox/issues/3 for details.
         """
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
         sut.add(Station('foo', 'bar', 'http://example.stream', 15))
 
         sut.add(Station('1', 'one', 'http://example.stream/1', 15))
@@ -152,10 +154,10 @@ class StationRepositoryTestCase(TestCase):
         assert s.stream is 'http://example.stream'
 
     def test_persistence_of_id_counter(self):
-        old_repository = StationRepository(None)
+        old_repository = StationRepository(Config(None))
         old_repository.add(Station('foo', 'bar', 'http://example.stream', 15))
         old_repository.remove(15)
-        sut = StationRepository(None)
+        sut = StationRepository(Config(None))
         expected = Station('Radio Tralalala', 'Finest Tralala Music', 'http://metamorphosator.com/stream')
 
         sut.add(expected)

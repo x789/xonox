@@ -8,19 +8,16 @@ from os import path
 from . import Station
 
 class StationRepository:
-    def __init__(self, configDirectory):
+    def __init__(self, config):
         self.__data = []
         self.__next_station_id = 0
-        if configDirectory is None:
-            configDirectory = Path.home()
-        self.__configPath = path.join(configDirectory, 'xonox.conf')
-        self.__load_data_from_file()
+        self.__config = config
+        self.__read_data_from_config()
 
     def add(self, station):
-        self.__update_next_station_id(station)
-        self.__ensure_station_id_set(station)
-        self.__data.append(station)
-        self.__write_data_to_file()
+        self.__add(station)
+        self.__write_data_to_config()
+        self.__save_config()
 
     def get(self, id):
         for x in self.__data:
@@ -35,9 +32,15 @@ class StationRepository:
         for x in self.__data:
             if x.id == id:
                 self.__data.remove(x)
-                self.__write_data_to_file()
+                self.__write_data_to_config()
+                self.__save_config()
                 return
         raise KeyError()
+
+    def __add(self, station):        
+        self.__update_next_station_id(station)
+        self.__ensure_station_id_set(station)
+        self.__data.append(station)
 
     def __ensure_station_id_set(self, station):
         if station.id is None:
@@ -48,30 +51,26 @@ class StationRepository:
         if station.id is not None and station.id >= self.__next_station_id:
             self.__next_station_id = station.id + 1
 
-    def __load_data_from_file(self):
-        try:
-            with open(self.__configPath, 'r') as file:
-                config = json.load(file)
-                self.__read_stations_from_config(config)
-                self.__read_next_station_id_from_config(config)
-        except FileNotFoundError:
-            pass
+    def __read_data_from_config(self):
+        self.__read_stations_from_config()
+        self.__read_next_station_id_from_config()
 
-    def __read_stations_from_config(self, config):
-        if 'stations' in config:
-            stations = config['stations']
+    def __read_stations_from_config(self):
+        if 'stations' in self.__config:
+            stations = self.__config['stations']
             for station in stations:
-                self.add(Station(station['name'], station['description'], station['stream']))
+                self.__add(Station(station['name'], station['description'], station['stream']))
 
-    def __read_next_station_id_from_config(self, config):
-        if 'nextStationId' in config:
+    def __read_next_station_id_from_config(self):
+        if 'nextStationId' in self.__config:
             try:
-                self.__next_station_id = int(config['nextStationId'])
+                self.__next_station_id = int(self.__config['nextStationId'])
             except ValueError:
                 self.__next_station_id = len(self.__data)
 
-    def __write_data_to_file(self):
-        if len(self.__data) > 0:
-            config = { 'stations': self.__data, 'nextStationId': self.__next_station_id }
-            with open(self.__configPath, 'w+') as file:
-                json.dump(config, file, default=lambda o: o.__dict__, sort_keys=False, indent=2)
+    def __write_data_to_config(self):
+        self.__config['stations'] = self.__data
+        self.__config['nextStationId'] = self.__next_station_id
+
+    def __save_config(self):
+        self.__config.save()

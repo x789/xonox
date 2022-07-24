@@ -54,17 +54,28 @@ curl --location --request GET 'http://legacy.noxonserver.eu/station'
 curl --location --request DELETE 'http://legacy.noxonserver.eu/station/0'
 ```
 
+## Bookmark/Preset/Favorite Support
+Since version 0.0.7.2 `xonox` supports the favorites/preset buttons of the iRadios. Due to technical challenges (see [this comment](https://github.com/x789/xonox/issues/9#issuecomment-1192408879)) only one favorites list is created for all devices by default. This means that a created favorite is available on all devices which are connected to the same server.
+Separate favorites lists per device are supported experimentally. If you want to try it, you can find more information in the _'Experimental Features'_ section later in this document.
+
 ## Configuration File
 By default, `xonox` writes its configuration and station-list to a file called `xonox.conf` inside the user's home directory. If this causes problems on your system, you can specify the storage directory using the `--config-dir` parameter.
 
-
-## Missing Features
-- Playlist support
-- A GUI to manage the station list
-- Support favorites/presets
-
+## Experimental Features
+### Per-Device Bookmarks/Favorites/Presets
+You can disable the global favorite-list by setting the property `useGlobalPresetList` to `false`:
+```
+curl --location --request POST 'http://legacy.noxonserver.eu/settings' \
+--header 'Content-Type: application/json' \
+--data-raw '{ "useGlobalPresetList": false }'
+```
+If you find want to re-enable the global preset list, set `useGlobalPresetList` to `true`.
 
 ## Changelog
+### 0.0.7.2
+- [Added support for preset-buttons](https://github.com/x789/xonox/issues/9)
+- [Order stations alphabetically](https://github.com/x789/xonox/issues/10)
+
 ### 0.0.6
 - Fixed [Management API does not return JSON](https://github.com/x789/xonox/issues/4)
 - Fixed [Non-unique station-IDs](https://github.com/x789/xonox/issues/3)
