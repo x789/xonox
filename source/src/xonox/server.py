@@ -2,20 +2,22 @@
 # (c) 2022 - TillW
 # Licensed to you under Affero GPL 3.0 (https://www.gnu.org/licenses/agpl-3.0.html)
 
+from functools import wraps
 from collections import namedtuple
 from flask import Flask, request, abort, jsonify, json, Response
-from . import Config, Station, StationRepository, Preset, PresetRepository
+from . import Config, Station, StationRepository, Preset, PresetService
 
 # WebAPI Helpers #################
 ##################################
 def convert_input_to(class_):
-    '''A decorator to create an object from the JSON transferred in a request-body.'''
-    def wrap(f):
-        def decorator(*args):
+    def decorator(fn):
+        '''A decorator to create an object from the JSON transferred in a request-body.'''
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
             obj = class_(**request.get_json())
-            return f(obj)
-        return decorator
-    return wrap
+            return fn(obj)
+        return wrapper
+    return decorator
 
 class ObjectToJsonStringEncoder(json.JSONEncoder):
     '''A JSON encoder that tries to serialize using 'to_json' or returns the dictionary of the object to serialize.'''
@@ -33,7 +35,7 @@ class ObjectToJsonStringEncoder(json.JSONEncoder):
 ##################################
 app = Flask(__name__)
 stationRepository = None
-presetRepository = None
+presetService = None
 stationTracker = dict() # used to track the last requested station per device to support presets/favorites
 app.json_encoder = ObjectToJsonStringEncoder
 
@@ -67,6 +69,23 @@ def delete_station(id):
     except KeyError:
         return abort(404)
 
+@app.route('/settings', methods=['post'])
+@convert_input_to(namedtuple('WriteSettingsDto', 'useGlobalPresetList'))
+def read_config(dto):
+    global config
+    settings = {'useGlobalPresetList': bool(dto.useGlobalPresetList) }
+    config['settings'] = settings 
+    config.save()
+    return Response(status=204)
+
+@app.route('/settings', methods=['get'])
+def read_settings():
+    global config
+    if 'settings' in config:
+        return jsonify(config['settings'])
+    else:
+        return jsonify({})
+
 # NOXON(tm) API ##################
 ##################################
 @app.route('/setupapp/fs/asp/BrowseXML/loginXML.asp')
@@ -92,7 +111,7 @@ def add_preset():
     device_id, preset_index = __get_device_and_preset_index(request)
     if device_id in stationTracker.keys():
         station_id = stationTracker[device_id]
-        presetRepository.add(Preset(device_id, preset_index, station_id))
+        presetService.add_preset(device_id, preset_index, station_id)
         result = '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?><ListOfItems><ItemCount>-1</ItemCount><Item><ItemType>Message</ItemType><Message>Preset set</Message></Item></ListOfItems>'
     else:
         result = '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?><ListOfItems><ItemCount>-1</ItemCount>'
@@ -102,9 +121,9 @@ def add_preset():
 
 @app.route('/Favorites/GetPreset.aspx')
 def get_preset():
-    device_id, preset_index = __get_device_and_preset_index(request)
+    group_id, preset_index = __get_device_and_preset_index(request)
     try:
-        preset = presetRepository.get(device_id, preset_index)
+        preset = presetService.get_preset(group_id, preset_index)
         station = stationRepository.get(preset.station_id)
         return __create_station_list([station], request.host_url)
     except KeyError:
@@ -141,8 +160,9 @@ def __get_device_and_preset_index(request):
 ##################################
 def run(host, config_directory):
     global stationRepository
-    global presetRepository
+    global presetService
+    global config
     config = Config(config_directory)
     stationRepository = StationRepository(config)
-    presetRepository = PresetRepository(config)
+    presetService = PresetService(config)
     app.run(host=host, port=80)
