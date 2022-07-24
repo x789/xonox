@@ -36,6 +36,7 @@ class ObjectToJsonStringEncoder(json.JSONEncoder):
 app = Flask(__name__)
 stationRepository = None
 presetRepository = None
+config = None
 stationTracker = dict() # used to track the last requested station per device to support presets/favorites
 app.json_encoder = ObjectToJsonStringEncoder
 
@@ -144,6 +145,7 @@ def __get_device_and_preset_index(request):
 def run(host, config_directory):
     global stationRepository
     global presetRepository
+    global config
     config = Config(config_directory)
     stationRepository = StationRepository(config)
     presetRepository = PresetRepository(config)
