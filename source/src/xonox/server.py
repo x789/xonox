@@ -70,6 +70,23 @@ def delete_station(id):
     except KeyError:
         return abort(404)
 
+@app.route('/settings', methods=['post'])
+@convert_input_to(namedtuple('WriteSettingsDto', 'useGlobalPresetList'))
+def read_config(dto):
+    global config
+    settings = {'useGlobalPresetList': bool(dto.useGlobalPresetList) }
+    config['settings'] = settings 
+    config.save()
+    return Response(status=204)
+
+@app.route('/settings', methods=['get'])
+def read_settings():
+    global config
+    if 'settings' in config:
+        return jsonify(config['settings'])
+    else:
+        return jsonify({})
+
 # NOXON(tm) API ##################
 ##################################
 @app.route('/setupapp/fs/asp/BrowseXML/loginXML.asp')
