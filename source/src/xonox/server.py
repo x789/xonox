@@ -5,7 +5,7 @@
 from functools import wraps
 from collections import namedtuple
 from flask import Flask, request, abort, jsonify, json, Response
-from . import Config, Station, StationRepository, Preset, PresetRepository
+from . import Config, Station, StationRepository, Preset, PresetService
 
 # WebAPI Helpers #################
 ##################################
@@ -35,8 +35,7 @@ class ObjectToJsonStringEncoder(json.JSONEncoder):
 ##################################
 app = Flask(__name__)
 stationRepository = None
-presetRepository = None
-config = None
+presetService = None
 stationTracker = dict() # used to track the last requested station per device to support presets/favorites
 app.json_encoder = ObjectToJsonStringEncoder
 
@@ -112,7 +111,7 @@ def add_preset():
     device_id, preset_index = __get_device_and_preset_index(request)
     if device_id in stationTracker.keys():
         station_id = stationTracker[device_id]
-        presetRepository.add(Preset(device_id, preset_index, station_id))
+        presetService.add_preset(device_id, preset_index, station_id)
         result = '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?><ListOfItems><ItemCount>-1</ItemCount><Item><ItemType>Message</ItemType><Message>Preset set</Message></Item></ListOfItems>'
     else:
         result = '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?><ListOfItems><ItemCount>-1</ItemCount>'
@@ -122,9 +121,9 @@ def add_preset():
 
 @app.route('/Favorites/GetPreset.aspx')
 def get_preset():
-    device_id, preset_index = __get_device_and_preset_index(request)
+    group_id, preset_index = __get_device_and_preset_index(request)
     try:
-        preset = presetRepository.get(device_id, preset_index)
+        preset = presetService.get_preset(group_id, preset_index)
         station = stationRepository.get(preset.station_id)
         return __create_station_list([station], request.host_url)
     except KeyError:
@@ -161,9 +160,9 @@ def __get_device_and_preset_index(request):
 ##################################
 def run(host, config_directory):
     global stationRepository
-    global presetRepository
+    global presetService
     global config
     config = Config(config_directory)
     stationRepository = StationRepository(config)
-    presetRepository = PresetRepository(config)
+    presetService = PresetService(config)
     app.run(host=host, port=80)
