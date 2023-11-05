@@ -1,10 +1,11 @@
 # xonox - an alternative service for legacy NOXON(tm) devices
-# (c) 2022 - TillW
+# (c) 2023 - TillW
 # Licensed to you under Affero GPL 3.0 (https://www.gnu.org/licenses/agpl-3.0.html)
 
 from functools import wraps
 from collections import namedtuple
-from flask import Flask, request, abort, jsonify, json, Response
+from flask import Flask, request, abort, jsonify, Response
+from json import JSONEncoder
 from . import Config, Station, StationRepository, Preset, PresetService
 
 # WebAPI Helpers #################
@@ -19,7 +20,7 @@ def convert_input_to(class_):
         return wrapper
     return decorator
 
-class ObjectToJsonStringEncoder(json.JSONEncoder):
+class ObjectToJsonStringEncoder(JSONEncoder):
     '''A JSON encoder that tries to serialize using 'to_json' or returns the dictionary of the object to serialize.'''
     def default(self, o):
         if hasattr(o, 'to_json'):
