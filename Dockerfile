@@ -1,6 +1,6 @@
 FROM python:3-slim
 
-LABEL version="0.0.7.2"
+LABEL version="1.0.0"
 LABEL name="xonox"
 LABEL description="xonox - an alternative service for legacy NOXON(tm) devices"
 LABEL url="https://github.com/x789/xonox/"

@@ -72,6 +72,10 @@ curl --location --request POST 'http://legacy.noxonserver.eu/settings' \
 If you find want to re-enable the global preset list, set `useGlobalPresetList` to `true`.
 
 ## Changelog
+### 1.0.0
+- Use semantic versioning
+- [Added compatibility with Flask >= 2.3.0](https://github.com/x789/xonox/issues/14)
+
 ### 0.0.7.2
 - [Added support for preset-buttons](https://github.com/x789/xonox/issues/9)
 - [Order stations alphabetically](https://github.com/x789/xonox/issues/10)
@@ -91,4 +95,4 @@ If you find want to re-enable the global preset list, set `useGlobalPresetList` 
 ### 0.0.3
 - First publicly available release
 
-(c) 2022 TillW - Licensed to you under the AGPL v3.0
+(c) 2023 TillW - Licensed to you under the AGPL v3.0
