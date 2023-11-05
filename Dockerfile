@@ -1,4 +1,4 @@
-FROM python:3-slim-buster
+FROM python:3-slim
 
 LABEL version="0.0.7.2"
 LABEL name="xonox"
