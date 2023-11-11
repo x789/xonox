@@ -90,6 +90,7 @@ def read_settings():
 # NOXON(tm) API ##################
 ##################################
 @app.route('/setupapp/fs/asp/BrowseXML/loginXML.asp')
+@app.route('/setupapp/radio567/asp/BrowseXML/loginXML.asp')
 def get_root_menu():
     if (__get_device_id(request) is None):
         return '<EncryptedToken>a6703ded78821be5</EncryptedToken>'
@@ -98,6 +99,7 @@ def get_root_menu():
         return __create_station_list(sorted_stations, request.host_url)
 
 @app.route('/setupapp/fs/asp/BrowseXML/Search.asp')
+@app.route('/setupapp/radio567/asp/BrowseXML/loginXML.asp')
 def search_station():
     requestedStationId = int(request.args.get('Search'))
     try:
