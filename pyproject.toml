@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "xonox"
+version = "1.0.0"
+description = "An alternative infrastructure-service for legacy NOXON(tm) devices"
+license = "AGPL-3.0-only"
+authors = ["TillW "]
+readme = "README.md"
+homepage = "https://github.com/x789/xonox"
+repository = "https://github.com/x789/xonox"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent"
+    ]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/x789/xonox/issues"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+flask = "^3.0.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.3"
+pyfakefs = "^5.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

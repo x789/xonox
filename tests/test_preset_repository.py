@@ -3,7 +3,7 @@
 # Licensed to you under Affero GPL 3.0 (https://www.gnu.org/licenses/agpl-3.0.html)
 
 from pyfakefs.fake_filesystem_unittest import TestCase
-from src.xonox import Config, Preset, PresetRepository
+from xonox import Config, Preset, PresetRepository
 
 class PresetRepositoryTestCase(TestCase):
     def setUp(self):
