@@ -151,7 +151,8 @@ def __track_station(station, request):
     stationTracker[device_id] = station.id
 
 def __get_device_id(request):
-    return str(request.args.get('mac'))
+    mac = request.args.get('mac')
+    return None if mac is None else str(mac)
 
 def __get_preset_index(request):
     return int(request.args.get('id'))
