@@ -9,7 +9,7 @@ COPY . /app
 WORKDIR /app
 RUN poetry install
 
-FROM python:3-slim as base
+FROM python:3-alpine as base
 LABEL version="1.0.0"
 LABEL name="xonox"
 LABEL author="TillW"
