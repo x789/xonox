@@ -91,6 +91,7 @@ def read_settings():
 ##################################
 @app.route('/setupapp/fs/asp/BrowseXML/loginXML.asp')
 @app.route('/setupapp/radio567/asp/BrowseXPA/LoginXML.asp')
+@app.route('/setupapp/radio567/asp/BrowseXPA/loginXML.asp')
 def get_root_menu():
     if (__get_device_id(request) is None):
         return '<EncryptedToken>a6703ded78821be5</EncryptedToken>'
