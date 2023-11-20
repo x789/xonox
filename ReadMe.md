@@ -90,7 +90,7 @@ poetry build
 
 ## Changelog
 ### 1.1.0
-- Add support for _Noxon(tm) 2 Audio_
+- Add support for Noxon(tm) 2 Audio
 
 ### 1.0.1
 - Fixed [Management API: Get station and station-list does not work](https://github.com/x789/xonox/issues/16)
