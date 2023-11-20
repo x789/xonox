@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "xonox"
-version = "1.1.0-dev4"
+version = "1.0.1"
 description = "An alternative infrastructure-service for legacy NOXON(tm) devices"
 license = "AGPL-3.0-only"
 authors = ["TillW "]
