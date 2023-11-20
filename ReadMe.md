@@ -2,13 +2,14 @@
 An alternative infrastructure-service for legacy NOXON(tm) devices.
 
 ## Prerequisites
-You need a device that is always-on, reachable by your iRadios and capable to run Python-scripts. Additionally, you need to redirect DNS entries to the device that runs `xonox`.
+You need a device that is always-on, reachable by your radios and capable to run Python-scripts. Additionally, you need to redirect DNS entries to the device that runs `xonox`.
 
 ## Compatible Devices
 The following devices were reported as compatible:
 * Noxon(tm) iRadio
 * Noxon(tm) iRadio 300/360
 * Noxon(tm) iRadio 400
+* Noxon(tm) 2 Audio (no support for podcasts or favorites)
 
 ## Getting Started
 ### Installation
@@ -58,15 +59,15 @@ curl --location --request DELETE 'http://legacy.noxonserver.eu/station/0'
 ```
 
 ## Bookmark/Preset/Favorite Support
-Since version 0.0.7.2 `xonox` supports the favorites/preset buttons of the iRadios. Due to technical challenges (see [this comment](https://github.com/x789/xonox/issues/9#issuecomment-1192408879)) only one favorites list is created for all devices by default. This means that a created favorite is available on all devices which are connected to the same server.
-Separate favorites lists per device are supported experimentally. If you want to try it, you can find more information in the _'Experimental Features'_ section later in this document.
+Since version 0.0.7.2 `xonox` supports the preset-buttons of the iRadios. Due to technical challenges (see [this comment](https://github.com/x789/xonox/issues/9#issuecomment-1192408879)) only one preset-list is created for all devices by default. This means that a created preset is available on all devices which are connected to the same server.
+Separate preset-lists per device are supported experimentally. If you want to try it, you can find more information in the _'Experimental Features'_ section later in this document.
 
 ## Configuration File
 By default, `xonox` writes its configuration and station-list to a file called `xonox.conf` inside the user's home directory. If this causes problems on your system, you can specify the storage directory using the `--config-dir` parameter.
 
 ## Experimental Features
 ### Per-Device Bookmarks/Favorites/Presets
-You can disable the global favorite-list by setting the property `useGlobalPresetList` to `false`:
+You can disable the global preset-list by setting the property `useGlobalPresetList` to `false`:
 ```
 curl --location --request POST 'http://legacy.noxonserver.eu/settings' \
 --header 'Content-Type: application/json' \
@@ -88,6 +89,9 @@ poetry build
 ```
 
 ## Changelog
+### 1.1.0
+- Add support for Noxon(tm) 2 Audio
+
 ### 1.0.0
 - Use semantic versioning
 - [Added compatibility with Flask >= 2.3.0](https://github.com/x789/xonox/issues/14)
