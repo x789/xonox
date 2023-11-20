@@ -88,6 +88,9 @@ poetry build
 ```
 
 ## Changelog
+### 1.0.1
+- Fixed [Management API: Get station and station-list does not work](https://github.com/x789/xonox/issues/16)
+
 ### 1.0.0
 - Use semantic versioning
 - [Added compatibility with Flask >= 2.3.0](https://github.com/x789/xonox/issues/14)
