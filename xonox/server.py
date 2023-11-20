@@ -5,7 +5,7 @@
 from functools import wraps
 from collections import namedtuple
 from flask import Flask, request, abort, jsonify, Response
-from json import JSONEncoder
+import json
 from . import Config, Station, StationRepository, Preset, PresetService
 
 # WebAPI Helpers #################
@@ -20,7 +20,7 @@ def convert_input_to(class_):
         return wrapper
     return decorator
 
-class ObjectToJsonStringEncoder(JSONEncoder):
+class ObjectToJsonStringEncoder(json.JSONEncoder):
     '''A JSON encoder that tries to serialize using 'to_json' or returns the dictionary of the object to serialize.'''
     def default(self, o):
         if hasattr(o, 'to_json'):
@@ -37,8 +37,7 @@ class ObjectToJsonStringEncoder(JSONEncoder):
 app = Flask(__name__)
 stationRepository = None
 presetService = None
-stationTracker = dict() # used to track the last requested station per device to support presets/favorites
-app.json_encoder = ObjectToJsonStringEncoder
+stationTracker = dict() # used to track the last requested station per device to support presets
 
 # Management API #################
 ##################################
@@ -53,12 +52,12 @@ def create_station(dto):
 
 @app.route('/station', methods=['get'])
 def get_station_list():
-    return jsonify(stationRepository.get_all())
+    return json.dumps(stationRepository.get_all(), cls=ObjectToJsonStringEncoder)
 
 @app.route('/station/<int:id>', methods=['get'])
 def get_station(id):
     try:
-        return jsonify(stationRepository.get(id))
+        return json.dumps(stationRepository.get(id), cls=ObjectToJsonStringEncoder)
     except KeyError:
         return abort(404)
 
