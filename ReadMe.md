@@ -6,9 +6,9 @@ You need a device that is always-on, reachable by your radios and capable to run
 
 ## Compatible Devices
 The following devices were reported as compatible:
-* Noxon(tm) iRadio
 * Noxon(tm) iRadio 300/360
 * Noxon(tm) iRadio 400
+* Noxon(tm) iRadio (no support for podcasts or favorites)
 * Noxon(tm) 2 Audio (no support for podcasts or favorites)
 
 ## Getting Started
