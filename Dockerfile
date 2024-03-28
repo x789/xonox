@@ -10,7 +10,7 @@ WORKDIR /app
 RUN poetry install
 
 FROM python:3-alpine as base
-LABEL version="1.0.0"
+LABEL version="1.1.0"
 LABEL name="xonox"
 LABEL author="TillW"
 LABEL description="An alternative infrastructure-service for legacy NOXON(tm) devices."
