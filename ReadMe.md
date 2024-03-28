@@ -90,7 +90,7 @@ poetry build
 
 ## Changelog
 ### 1.1.0
-- Add support for Noxon(tm) 2 Audio
+- Add support for _Noxon(tm) 2 Audio_ and _Noxon iRadio_ [#13](https://github.com/x789/xonox/issues/13)
 
 ### 1.0.1
 - Fixed [Management API: Get station and station-list does not work](https://github.com/x789/xonox/issues/16)
@@ -119,4 +119,4 @@ poetry build
 ### 0.0.3
 - First publicly available release
 
-(c) 2023 TillW - Licensed to you under the AGPL v3.0
+(c) 2024 TillW - Licensed to you under the AGPL v3.0
