@@ -39,6 +39,10 @@ class IntegrationTests(unittest.TestCase):
         with XonoxContainer(self.image_tag) as ctr:
             ctr.wait_for_app()
             self.base_url = ctr.base_url
+            local_stations = [ {"name": "abc", "description": "first", "streamUrl": "http://abc/mp3-stream"},
+                         {"name": "def", "description": "second", "streamUrl": "http://def/stream"},
+                         {"name": "xyz", "description": "last", "streamUrl": "http://xyz.example.com/"}
+            ]
 
             # Verify prerequisites
             assert len(self.__get_station_list()) == 0
@@ -49,12 +53,7 @@ class IntegrationTests(unittest.TestCase):
             self.__write_settings(settings)
             assert self.__get_settings() == settings
 
-            # Add three stations and verify the operation
-            local_stations = [ {"name": "abc", "description": "first", "streamUrl": "http://abc/mp3-stream"},
-                         {"name": "def", "description": "second", "streamUrl": "http://def/stream"},
-                         {"name": "xyz", "description": "last", "streamUrl": "http://xyz.example.com/"}
-            ]
-
+            # Add local stations
             for station in local_stations:
                 self.__add_station(station)
 
@@ -72,12 +71,26 @@ class IntegrationTests(unittest.TestCase):
                 expected_data.append({**value, **default_data, "id": str(index)})
             assert playback_list == expected_data
 
-            # Receive data of second station (iRadio 300)
+            # "Play" second station (iRadio 300)
             playback_data = self.__get_playback_data(1)
             assert playback_data["id"] == "1"
             assert playback_data["name"] == local_stations[1]["name"]
             assert playback_data["streamUrl"] == local_stations[1]["streamUrl"]
             assert playback_data["description"] == local_stations[1]["description"]
+
+            # Get non-existing preset #1 (iRadio 300)
+            item = self.__get_preset(1)
+            assert item["type"] == "Message"
+            assert item["message"] == "Preset not found"
+
+            # Create a preset for second station at index 1. (iRadio 300)
+            item = self.__set_preset(1)
+            assert item["type"] == "Message"
+            assert item["message"] == "Preset set"
+
+            # Fetch the preset
+            preset = self.__get_preset(1)
+            assert preset == {**local_stations[1], **default_data, "id": "1"}
 
             # Delete a station
             id_of_second_station = [s["id"] for s in remote_stations if s["name"] == local_stations[1]["name"]][0]
@@ -87,8 +100,6 @@ class IntegrationTests(unittest.TestCase):
             remote_stations = self.__get_station_list()
             assert self.__remove_ids(remote_stations) == [local_stations[0], local_stations[-1]]
             
-
-
 
     def __get_station_list(self):
         response = requests.get(f"{self.base_url}/station")
@@ -124,17 +135,44 @@ class IntegrationTests(unittest.TestCase):
         assert len(items) == 1
         return items[0]
     
+    
     def __get_playback_list(self):
         response = requests.get(f"{self.base_url}/setupapp/fs/asp/BrowseXML/loginXML.asp?mac=aff3")
         assert response.status_code == 200
         return self.__noxon_item_list_to_python(response.text)
+    
+
+    def __get_preset(self, index):
+        response = requests.get(f"{self.base_url}/Favorites/GetPreset.aspx?mac=aff3&dlang=eng&fver=79&hw=10143&id={index}&itemid=")
+        assert response.status_code == 200
+        items = self.__noxon_item_list_to_python(response.text)
+        assert len(items) == 1
+        return items[0]
+    
+
+    def __set_preset(self, index):
+        response = requests.get(f"{self.base_url}/Favorites/AddPreset.aspx?mac=aff3&dlang=eng&fver=79&hw=10143&id={index}&itemid=")
+        print(response.text)
+        assert response.status_code == 200
+        items = self.__noxon_item_list_to_python(response.text)
+        assert len(items) == 1
+        return items[0]
 
 
     def __noxon_item_list_to_python(self, response_body):
         root = ET.fromstring(response_body)
-        assert root.tag == "ListOfItems"
         items = root.findall("Item")
-        return [self.__noxon_item_to_dict(i) for i in items]
+        result = []
+        for item in items:
+            if item.find("ItemType").text == "Message":
+                result.append(self.__noxon_message_to_dict(item))
+            else:
+                result.append(self.__noxon_item_to_dict(item))
+        return result
+
+
+    def __noxon_message_to_dict(self, item):
+        return {"type": "Message", "message": item.find("Message").text}
 
 
     def __noxon_item_to_dict(self, item):
